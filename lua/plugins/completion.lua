@@ -49,19 +49,18 @@ return {
 		},
 		keys = {
 			{
-				"<leader>oa",
+				"<C-o>",
 				function()
-					require("opencode").ask()
+					require("opencode").toggle()
 				end,
 				mode = "n",
 			},
 			{
-				"<leader>oa",
+				"<C-a>",
 				function()
-					require("opencode").ask("@selection: ")
+					require("opencode").ask()
 				end,
-				mode = "v",
-			},
+			}
 		},
 	},
 	{
