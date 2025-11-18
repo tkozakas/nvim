@@ -25,6 +25,7 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.list = true
+vim.opt.listchars = { tab = '▏ ', trail = '·', nbsp = '␣' }
 vim.opt.inccommand = "split"
 vim.opt.scrolloff = 999
 vim.opt.hlsearch = false
@@ -34,7 +35,12 @@ vim.opt.swapfile = false
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
 vim.opt.exrc = true
-vim.diagnostic.config({ virtual_text = true }) 
+vim.diagnostic.config({
+	virtual_text = {
+		spacing = 4,
+		prefix = "●",
+	},
+}) 
 vim.opt.background = "dark"
 
 vim.o.tabstop = 2 -- how many spaces tab inserts

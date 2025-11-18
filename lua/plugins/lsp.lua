@@ -83,13 +83,16 @@ return {
 				},
 			})
 
-			vim.lsp.handlers["textDocument/publishDiagnostics"] =
-				vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-					virtual_text = true,
-					signs = false,
-					underline = false,
-					update_in_insert = false,
-				})
+		vim.lsp.handlers["textDocument/publishDiagnostics"] =
+			vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+			virtual_text = {
+				spacing = 4,
+				prefix = "●",
+			},
+				signs = false,
+				underline = false,
+				update_in_insert = false,
+			})
 		end,
 	},
 	{
