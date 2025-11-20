@@ -57,4 +57,11 @@ return {
       end, { desc = '[R]efactor extract [V]ariable' })
     end,
   },
+
+  {
+    'mbbill/undotree',
+    keys = {
+      { '<leader>u', vim.cmd.UndotreeToggle, desc = '[U]ndo tree' },
+    },
+  },
 }
