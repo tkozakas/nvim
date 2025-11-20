@@ -32,6 +32,7 @@ vim.opt.hlsearch = false
 vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.swapfile = false
+vim.opt.autochdir = true -- Auto change directory to current file's directory
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
 vim.opt.exrc = true
