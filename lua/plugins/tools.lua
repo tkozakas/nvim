@@ -93,6 +93,9 @@ return {
 		---@module "csvview"
 		---@type CsvView.Options
 		opts = {
+			view = {
+				display_mode = "border",
+			},
 			parser = { comments = { "#", "//" } },
 			keymaps = {
 				-- Text objects for selecting fields
@@ -107,6 +110,9 @@ return {
 				jump_next_row = { "<Enter>", mode = { "n", "v" } },
 				jump_prev_row = { "<S-Enter>", mode = { "n", "v" } },
 			},
+		},
+		keys = {
+			{ "<leader>csv", "<cmd>CsvViewToggle<cr>", desc = "Toggle CSV view" },
 		},
 		cmd = { "CsvViewEnable", "CsvViewDisable", "CsvViewToggle" },
 	},
