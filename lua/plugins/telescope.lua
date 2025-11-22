@@ -47,7 +47,9 @@ return {
     end, { desc = 'Find Recent Files' })
 
     vim.keymap.set('n', '<leader>ff', function()
-      require('telescope.builtin').find_files()
+      local git_root = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
+      local cwd = vim.v.shell_error == 0 and git_root or vim.fn.getcwd()
+      require('telescope.builtin').find_files({ cwd = cwd })
     end, { desc = '[F]ind [F]iles' })
 
     vim.keymap.set('n', '<leader>sg', function()
