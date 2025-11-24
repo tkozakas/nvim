@@ -39,6 +39,21 @@ return {
 					root_dir = require("lspconfig.util").root_pattern("Gemfile", ".git"),
 					settings = {},
 				},
+				groovyls = {
+					mason = false,
+					cmd = {
+						"java",
+						"-jar",
+						vim.fn.stdpath("config") .. "/lsp-servers/groovy-language-server-all.jar",
+					},
+					filetypes = { "groovy", "Jenkinsfile" },
+					root_dir = require("lspconfig.util").root_pattern(
+						"Jenkinsfile",
+						"build.gradle",
+						"settings.gradle",
+						".git"
+					),
+				},
 				lua_ls = {
 					on_init = function(client)
 						if client.workspace_folders then
@@ -65,23 +80,36 @@ return {
 				},
 			}
 
-			require("mason").setup()
+		require("mason").setup()
 
-			local ensure_installed = vim.tbl_keys(servers or {})
-			vim.list_extend(ensure_installed, {
-				"stylua",
-			})
-			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+		local ensure_installed = {}
+		for name, config in pairs(servers) do
+			if config.mason ~= false then
+				table.insert(ensure_installed, name)
+			end
+		end
+		vim.list_extend(ensure_installed, {
+			"stylua",
+		})
+		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-			require("mason-lspconfig").setup({
-				handlers = {
-					function(server_name)
-						local server = servers[server_name] or {}
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						require("lspconfig")[server_name].setup(server)
-					end,
-				},
-			})
+		require("mason-lspconfig").setup({
+			handlers = {
+				function(server_name)
+					local server = servers[server_name] or {}
+					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+					require("lspconfig")[server_name].setup(server)
+				end,
+			},
+		})
+
+		-- Setup non-Mason servers
+		for server_name, server_config in pairs(servers) do
+			if server_config.mason == false then
+				server_config.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server_config.capabilities or {})
+				require("lspconfig")[server_name].setup(server_config)
+			end
+		end
 
 		vim.lsp.handlers["textDocument/publishDiagnostics"] =
 			vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
