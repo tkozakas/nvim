@@ -28,99 +28,100 @@ return {
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-			local servers = {
-				yamlls = {},
-				gopls = {},
-				pyright = {},
-				ruby_lsp = {
-					mason = false,
-					cmd = { "mise", "x", "--", "ruby-lsp" },
-					filetypes = { "ruby" },
-					root_dir = require("lspconfig.util").root_pattern("Gemfile", ".git"),
-					settings = {},
-				},
-				groovyls = {
-					mason = false,
-					cmd = {
-						"java",
-						"-jar",
-						vim.fn.stdpath("config") .. "/lsp-servers/groovy-language-server-all.jar",
-					},
-					filetypes = { "groovy", "Jenkinsfile" },
-					root_dir = require("lspconfig.util").root_pattern(
-						"Jenkinsfile",
-						"build.gradle",
-						"settings.gradle",
-						".git"
-					),
-				},
-				lua_ls = {
-					on_init = function(client)
-						if client.workspace_folders then
-							local path = client.workspace_folders[1].name
-							if
-								vim.loop.fs_stat(path .. "/.luarc.json")
-								or vim.loop.fs_stat(path .. "/.luarc.jsonc")
-							then
-								return
-							end
-						end
+			-- Configure LSP servers using vim.lsp.config
+			vim.lsp.config("*", {
+				capabilities = capabilities,
+			})
 
-						client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-							runtime = { version = "LuaJIT" },
-							workspace = {
-								checkThirdParty = false,
-								library = { vim.env.VIMRUNTIME },
-							},
-						})
-					end,
-					settings = {
-						Lua = {},
-					},
+			vim.lsp.config.yamlls = {}
+			vim.lsp.config.gopls = {}
+			vim.lsp.config.pyright = {}
+
+			vim.lsp.config.ruby_lsp = {
+				cmd = { "mise", "x", "--", "ruby-lsp" },
+				filetypes = { "ruby" },
+				root_markers = { "Gemfile", ".git" },
+				settings = {},
+			}
+
+			vim.lsp.config.groovyls = {
+				cmd = {
+					"java",
+					"-jar",
+					vim.fn.stdpath("config") .. "/lsp-servers/groovy-language-server-all.jar",
+				},
+				filetypes = { "groovy", "Jenkinsfile" },
+				root_markers = {
+					"Jenkinsfile",
+					"build.gradle",
+					"settings.gradle",
+					".git"
 				},
 			}
 
-		require("mason").setup()
+			vim.lsp.config.lua_ls = {
+				on_init = function(client)
+					if client.workspace_folders then
+						local path = client.workspace_folders[1].name
+						if
+							vim.loop.fs_stat(path .. "/.luarc.json")
+							or vim.loop.fs_stat(path .. "/.luarc.jsonc")
+						then
+							return
+						end
+					end
 
-		local ensure_installed = {}
-		for name, config in pairs(servers) do
-			if config.mason ~= false then
-				table.insert(ensure_installed, name)
-			end
-		end
-		vim.list_extend(ensure_installed, {
-			"stylua",
-		})
-		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
-		require("mason-lspconfig").setup({
-			handlers = {
-				function(server_name)
-					local server = servers[server_name] or {}
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
+					client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+						runtime = { version = "LuaJIT" },
+						workspace = {
+							checkThirdParty = false,
+							library = { vim.env.VIMRUNTIME },
+						},
+					})
 				end,
-			},
-		})
+				settings = {
+					Lua = {},
+				},
+			}
 
-		-- Setup non-Mason servers
-		for server_name, server_config in pairs(servers) do
-			if server_config.mason == false then
-				server_config.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server_config.capabilities or {})
-				require("lspconfig")[server_name].setup(server_config)
-			end
-		end
+			require("mason").setup()
 
-		vim.lsp.handlers["textDocument/publishDiagnostics"] =
-			vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-			virtual_text = {
-				spacing = 4,
-				prefix = "●",
-			},
-				signs = false,
-				underline = false,
-				update_in_insert = false,
+			local servers = {
+				"yamlls",
+				"gopls",
+				"pyright",
+				"lua_ls",
+			}
+
+			require("mason-tool-installer").setup({
+				ensure_installed = vim.list_extend(vim.deepcopy(servers), {
+					"stylua",
+				})
 			})
+
+			require("mason-lspconfig").setup({
+				ensure_installed = servers,
+				handlers = {
+					function(server_name)
+						vim.lsp.enable(server_name)
+					end,
+				},
+			})
+
+			-- Enable non-Mason LSP servers
+			vim.lsp.enable("ruby_lsp")
+			vim.lsp.enable("groovyls")
+
+			vim.lsp.handlers["textDocument/publishDiagnostics"] =
+				vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+				virtual_text = {
+					spacing = 4,
+					prefix = "●",
+				},
+					signs = false,
+					underline = false,
+					update_in_insert = false,
+				})
 		end,
 	},
 	{
