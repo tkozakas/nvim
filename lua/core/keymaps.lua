@@ -19,6 +19,8 @@ vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" 
 vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 vim.keymap.set("n", "d", '"_d', { desc = "Delete (no yank)" })
 vim.keymap.set("x", "d", '"_d', { desc = "Delete selection (no yank)" })
+vim.keymap.set("n", "<leader>[", "<C-o>", { desc = "Jump back" })
+vim.keymap.set("n", "<leader>]", "<C-i>", { desc = "Jump forward" })
 
 -- Buffer Management
 vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "[B]uffer: Switch to previous" })
@@ -35,6 +37,9 @@ vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "[B]uffer: [P]revio
 -- Code Operations
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "[C]ode: [A]ction" })
 vim.keymap.set("n", "<leader>cc", "<cmd>ClaudeCode<CR>", { desc = "[C]ode: Toggle [C]laude AI" })
+
+-- LSP Navigation
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "LSP: Go to references" })
 
 -- Git Operations
 vim.keymap.set("n", "<leader>gc", ":Gcommit<CR>", { desc = "[G]it: [C]ommit" })
