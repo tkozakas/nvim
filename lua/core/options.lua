@@ -30,7 +30,7 @@ vim.opt.list = true
 vim.opt.listchars = { tab = '▏ ', trail = '·', nbsp = '␣' }
 vim.opt.number = true
 vim.opt.relativenumber = false
-vim.opt.scrolloff = 999
+vim.opt.scrolloff = 10
 vim.opt.signcolumn = "yes"
 vim.opt.splitbelow = true
 vim.opt.splitright = true
