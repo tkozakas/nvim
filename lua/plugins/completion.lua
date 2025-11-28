@@ -49,13 +49,6 @@ return {
 		},
 		keys = {
 			{
-				"<C-o>",
-				function()
-					require("opencode").toggle()
-				end,
-				mode = "n",
-			},
-			{
 				"<C-a>",
 				function()
 					require("opencode").ask()
