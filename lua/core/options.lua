@@ -5,7 +5,6 @@ vim.g.have_nerd_font = false
 
 -- General behavior
 vim.opt.autoread = true -- auto update file if changed outside of nvim
-vim.opt.autochdir = true -- auto change directory to current file's directory
 vim.opt.exrc = true
 vim.opt.mouse = "a"
 vim.opt.showmode = false
