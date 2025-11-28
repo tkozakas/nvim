@@ -21,7 +21,6 @@ return {
         find_files = {
           theme = 'ivy',
           layout_config = { height = 0.50 },
-          previewer = false,
         },
       },
       defaults = {
