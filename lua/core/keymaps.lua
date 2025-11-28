@@ -24,6 +24,10 @@ vim.keymap.set("x", "d", '"_d', { desc = "Delete selection (no yank)" })
 vim.keymap.set("n", "[", "<C-o>", { desc = "Jump back" })
 vim.keymap.set("n", "]", "<C-i>", { desc = "Jump forward" })
 
+-- Window splits
+vim.keymap.set("n", "<C-w>h", ":split<CR>", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<C-w>v", ":vsplit<CR>", { desc = "Split window vertically" })
+
 -- Buffer Management
 vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "[B]uffer: Switch to previous" })
 vim.keymap.set("n", "<leader>bd", ":bdelete<CR>", { desc = "[B]uffer: [D]elete" })
