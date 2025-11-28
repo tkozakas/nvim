@@ -16,6 +16,25 @@ return {
 		require("oil").setup(opts)
 		vim.keymap.set("n", "<leader>e", require("oil").open, { desc = "Open file explorer" })
 
+		vim.api.nvim_create_autocmd("BufEnter", {
+			callback = function(args)
+				local buftype = vim.bo[args.buf].buftype
+				if buftype ~= "" and buftype ~= "acwrite" then
+					return
+				end
+
+				local filepath = vim.api.nvim_buf_get_name(args.buf)
+				if filepath == "" then
+					return
+				end
+
+				local filedir = vim.fn.fnamemodify(filepath, ":h")
+				if vim.fn.isdirectory(filedir) == 1 then
+					vim.cmd.cd(filedir)
+				end
+			end,
+		})
+
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "oil",
 			callback = function(args)
